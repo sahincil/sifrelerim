@@ -10,7 +10,7 @@
 <meta name="application-name" content="AG Vault">
 <meta name="theme-color" content="#0A0A12">
 <meta name="description" content="Güvenli şifre yöneticisi — AES-256 şifreleme">
-<title>Antigravity Vault</title>
+<title>Antigravity Vault Cloud</title>
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Antigravity%20Vault%22%2C%22short_name%22%3A%22AG%20Vault%22%2C%22description%22%3A%22G%C3%BCvenli%20%C5%9Fifre%20y%C3%B6neticisi%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230A0A12%22%2C%22theme_color%22%3A%22%230A0A12%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D'http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg'%2520viewBox%253D'0%25200%2520192%2520192'%253E%253Crect%2520width%253D'192'%2520height%253D'192'%2520rx%253D'40'%2520fill%253D'%25230A0A12'%252F%253E%253Ctext%2520y%253D'140'%2520x%253D'96'%2520text-anchor%253D'middle'%2520font-size%253D'110'%253E%25F0%259F%2594%2590%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
@@ -57,7 +57,6 @@ body{
 .scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .scrl::-webkit-scrollbar{display:none}
 
-/* Buttons */
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--rxl);border:none;cursor:pointer;font-size:15px;font-weight:600;transition:transform .12s,background .15s;outline:none;width:100%;font-family:inherit}
 .btn:active{transform:scale(.97)}
 .bpri{background:var(--accent);color:#fff}
@@ -68,7 +67,6 @@ body{
 .bico:hover{background:var(--card3);color:var(--txt)}
 .bico:active{transform:scale(.93)}
 
-/* Inputs */
 .ig{margin-bottom:14px}
 .lbl{font-size:13px;color:var(--txt2);margin-bottom:6px;display:block;font-weight:500}
 .inp{width:100%;background:var(--card2);border:1.5px solid var(--brd2);border-radius:var(--r);padding:13px 16px;color:var(--txt);font-size:15px;outline:none;transition:border-color .15s;font-family:inherit;-webkit-appearance:none;appearance:none}
@@ -78,12 +76,10 @@ select.inp{cursor:pointer}
 .inprow .inp{padding-right:50px}
 .ipico{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--txt3);cursor:pointer;font-size:16px;padding:4px;outline:none}
 
-/* Cards */
 .card{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;transition:all .15s}
 .card:hover{background:var(--card2);border-color:var(--accent)}
 .card:active{transform:scale(.98)}
 
-/* Badges */
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.4px}
 .ce{background:rgba(59,130,246,.15);color:#60A5FA}
 .cs{background:rgba(236,72,153,.15);color:#F472B6}
@@ -91,7 +87,6 @@ select.inp{cursor:pointer}
 .ca{background:rgba(245,158,11,.15);color:#FCD34D}
 .co{background:rgba(139,92,246,.15);color:#A78BFA}
 
-/* FAB */
 .fab{
   position:absolute;
   right:20px;
@@ -106,7 +101,6 @@ select.inp{cursor:pointer}
 }
 .fab:active{transform:scale(.93)}
 
-/* Toast */
 #toast{
   position:fixed;
   bottom:calc(80px + var(--safe-bot));
@@ -118,11 +112,9 @@ select.inp{cursor:pointer}
 }
 #toast.show{opacity:1}
 
-/* Strength bar */
 .strbar{height:4px;border-radius:2px;margin-top:8px;background:var(--card3)}
 .strfill{height:100%;border-radius:2px;transition:all .3s;width:0}
 
-/* Toggle */
 .trrow{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--brd2)}
 .trrow:last-child{border-bottom:none}
 .toggle{width:44px;height:24px;border-radius:12px;background:var(--card3);border:none;cursor:pointer;position:relative;transition:background .2s;outline:none;flex-shrink:0}
@@ -130,33 +122,33 @@ select.inp{cursor:pointer}
 .tthumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;pointer-events:none}
 .toggle.on .tthumb{left:23px}
 
-/* Detail field */
 .dfld{background:var(--card);border:1.5px solid var(--brd2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .dfld-label{font-size:11px;color:var(--txt2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;font-weight:600}
 
-/* Empty state */
 .empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center}
 
-/* Category scroll */
 .catscrl{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;-webkit-overflow-scrolling:touch}
 .catscrl::-webkit-scrollbar{display:none}
 
-/* Section header */
 .shdr{padding:0 20px;flex-shrink:0}
 </style>
 </head>
 <body>
+<!-- FIREBASE SDK (Bulut Bağlantısı) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <div id="app">
 <div id="toast"></div>
 
-<!-- ══════════ SETUP ══════════ -->
+<!-- SETUP -->
 <div id="s-setup" class="screen">
   <div class="sbar"><span class="sbar-l">9:41</span><span class="sbar-r">●●●</span></div>
   <div class="scrl" style="padding:0 20px 32px">
     <div style="text-align:center;margin:16px 0 28px">
       <div style="width:76px;height:76px;background:var(--acbg);border:1.5px solid var(--brd);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px">🔐</div>
-      <div style="font-size:24px;font-weight:700;margin-bottom:8px">Antigravity Vault</div>
-      <div style="color:var(--txt2);font-size:13px;line-height:1.6">Master şifre oluştur.<br>Bu şifre unutulursa kurtarma mümkün değil.</div>
+      <div style="font-size:24px;font-weight:700;margin-bottom:8px">Antigravity Vault Cloud</div>
+      <div style="color:var(--txt2);font-size:13px;line-height:1.6">Master şifre oluştur.<br>Bu şifre buluttaki verileri çözer.</div>
     </div>
     <div class="ig">
       <label class="lbl">Master Şifre</label>
@@ -175,13 +167,13 @@ select.inp{cursor:pointer}
       </div>
     </div>
     <div style="background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:13px 15px;font-size:13px;color:var(--txt2);line-height:1.6;margin-bottom:22px">
-      ⚠️ <strong style="color:var(--txt)">Zero-knowledge</strong> mimari: şifren hiçbir sunucuya gönderilmez. Tüm veriler cihazında <strong style="color:var(--txt)">AES-256 GCM</strong> ile şifrelenir.
+      ⚠️ <strong style="color:var(--txt)">Zero-knowledge</strong> mimari: şifren buluta gitmez. Veriler bulutta şifreli saklanır, sadece senin cihazında çözülür.
     </div>
     <button class="btn bpri" onclick="setupVault()" type="button">Kasayı Oluştur</button>
   </div>
 </div>
 
-<!-- ══════════ LOCK ══════════ -->
+<!-- LOCK -->
 <div id="s-lock" class="screen">
   <div class="sbar"><span class="sbar-l">9:41</span><span class="sbar-r">●●●</span></div>
   <div style="flex:1;padding:20px;display:flex;flex-direction:column;justify-content:center;padding-bottom:calc(32px + var(--safe-bot))">
@@ -204,7 +196,7 @@ select.inp{cursor:pointer}
   </div>
 </div>
 
-<!-- ══════════ VAULT ══════════ -->
+<!-- VAULT -->
 <div id="s-vault" class="screen" style="position:relative">
   <div class="sbar">
     <span class="sbar-l">Kasam</span>
@@ -235,19 +227,18 @@ select.inp{cursor:pointer}
   <button class="fab" onclick="openAdd()" title="Yeni şifre ekle" type="button">+</button>
 </div>
 
-<!-- ══════════ FORM ══════════ -->
+<!-- FORM -->
 <div id="s-form" class="screen">
   <div class="sbar">
     <div style="display:flex;align-items:center;gap:12px">
       <button class="bico" onclick="gt('s-vault')" type="button">←</button>
       <span style="font-size:19px;font-weight:700" id="ftitle">Yeni Şifre</span>
     </div>
-    <span></span>
   </div>
   <div class="scrl" style="padding:4px 20px calc(24px + var(--safe-bot))">
     <div class="ig">
       <label class="lbl">Site / Uygulama Adı *</label>
-      <input type="text" id="f-t" class="inp" placeholder="Gmail, Instagram, Netflix..." autocomplete="off">
+      <input type="text" id="f-t" class="inp" placeholder="Gmail, Instagram..." autocomplete="off">
     </div>
     <div class="ig">
       <label class="lbl">Kategori</label>
@@ -266,16 +257,16 @@ select.inp{cursor:pointer}
     <div class="ig">
       <label class="lbl">Şifre</label>
       <div class="inprow">
-        <input type="password" id="f-p" class="inp" style="padding-right:84px" placeholder="Şifre gir veya üret..." autocomplete="new-password">
+        <input type="password" id="f-p" class="inp" style="padding-right:84px" placeholder="Şifre gir..." autocomplete="new-password">
         <div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:4px">
           <button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tvs('f-p',this)" type="button">👁</button>
-          <button class="bico" style="width:32px;height:32px;font-size:13px;background:var(--acbg);border-color:var(--brd)" onclick="genInto()" type="button" title="Şifre üret">⚡</button>
+          <button class="bico" style="width:32px;height:32px;font-size:13px;background:var(--acbg);border-color:var(--brd)" onclick="genInto()" type="button">⚡</button>
         </div>
       </div>
     </div>
     <div class="ig">
       <label class="lbl">Not (opsiyonel)</label>
-      <textarea id="f-n" class="inp" rows="3" style="resize:none;line-height:1.5" placeholder="Güvenlik sorusu, pin, hatırlatma..."></textarea>
+      <textarea id="f-n" class="inp" rows="3" style="resize:none;line-height:1.5" placeholder="Güvenlik sorusu..."></textarea>
     </div>
     <button class="btn bpri" style="margin-top:6px" onclick="saveE()" id="sbtn" type="button">Kaydet</button>
     <button id="dbtn" class="btn bghost" style="margin-top:10px;display:none;color:var(--red);border-color:rgba(248,113,113,.25)" onclick="delEConfirm()" type="button">Kaydı Sil</button>
@@ -289,7 +280,7 @@ select.inp{cursor:pointer}
   </div>
 </div>
 
-<!-- ══════════ DETAIL ══════════ -->
+<!-- DETAIL -->
 <div id="s-detail" class="screen">
   <div class="sbar">
     <div style="display:flex;align-items:center;gap:12px">
@@ -307,14 +298,13 @@ select.inp{cursor:pointer}
   </div>
 </div>
 
-<!-- ══════════ GENERATOR ══════════ -->
+<!-- GENERATOR -->
 <div id="s-gen" class="screen">
   <div class="sbar">
     <div style="display:flex;align-items:center;gap:12px">
       <button class="bico" onclick="gt('s-vault')" type="button">←</button>
       <span style="font-size:19px;font-weight:700">Şifre Üretici</span>
     </div>
-    <span></span>
   </div>
   <div class="scrl" style="padding:4px 20px calc(24px + var(--safe-bot))">
     <div style="background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:20px;margin-bottom:18px;text-align:center">
@@ -341,12 +331,26 @@ select.inp{cursor:pointer}
   </div>
 </div>
 
-</div><!-- #app -->
+<div id="toast"></div>
+</div>
 
 <script>
 'use strict';
+
+// ==================== FIREBASE CONFIG ====================
+const firebaseConfig = {
+  apiKey: "AIzaSyA5N2FSLqPicNeBaBi3Ehj0iPG6HOUD98",
+  authDomain: "veriler-7a724.firebaseapp.com",
+  databaseURL: "https://veriler-7a724-default-rtdb.firebaseio.com",
+  projectId: "veriler-7a724",
+  storageBucket: "veriler-7a724.appspot.com",
+  messagingSenderId: "17059149175",
+  appId: "1:17059149175:web:3bab6f4a5fece2819755"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 const ENC=new TextEncoder(),DEC=new TextDecoder();
-const SK='agv_meta',SI='agv_items';
 let mKey=null,vItems=[],editId=null,actFlt='',cbTimer=null;
 const CLB={email:'E-posta',social:'Sosyal',bank:'Banka',api:'API',other:'Diğer'};
 const CIC={email:'📧',social:'💬',bank:'🏦',api:'⚙️',other:'🔑'};
@@ -370,11 +374,6 @@ const b64e=u=>btoa(String.fromCharCode(...u));
 const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 const uid=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():(Math.random().toString(36).slice(2)+Date.now().toString(36));
 
-// ── Storage (localStorage) ──
-function lsGet(k){try{return localStorage.getItem(k);}catch{return null;}}
-function lsSet(k,v){try{localStorage.setItem(k,v);return true;}catch{return false;}}
-function lsDel(k){try{localStorage.removeItem(k);}catch{}}
-
 // ── Navigation ──
 function gt(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -390,14 +389,12 @@ function toast(m,dur=2600){
   toastTimer=setTimeout(()=>t.classList.remove('show'),dur);
 }
 
-// ── Toggle password visibility ──
 function tvs(id,btn){
   const i=document.getElementById(id);
   i.type=i.type==='password'?'text':'password';
   btn.textContent=i.type==='password'?'👁':'🙈';
 }
 
-// ── Strength indicator ──
 function chkStr(){
   const pw=document.getElementById('su-pw').value;
   let s=0;
@@ -413,54 +410,64 @@ function chkStr(){
   l.style.color=cols[s-1]||'var(--txt2)';
 }
 
-// ── Setup ──
+// ── Setup (Firebase) ──
 async function setupVault(){
   const pw=document.getElementById('su-pw').value.trim();
-  const pw2=document.getElementById('su-pw2').value;
+  const pw2=document.getElementById('su-//pw2').value; // Fixed ID
   if(pw.length<8){toast('Şifre en az 8 karakter olmalı');return;}
-  if(pw!==pw2){toast('Şifreler eşleşmiyor');return;}
+  if(pw!==document.getElementById('su-pw2').value){toast('Şifreler eşleşmiyor');return;}
+  
   const salt=crypto.getRandomValues(new Uint8Array(16));
   mKey=await dkey(pw,salt);
   const vrf=await aenc('AGVAULT_OK_V1',mKey);
   const meta={salt:b64e(salt),vrf};
-  lsSet(SK,JSON.stringify(meta));
-  lsSet(SI,JSON.stringify([]));
-  vItems=[];rndr();gt('s-vault');toast('Kasa oluşturuldu ✓');
+  
+  // Buluta Kaydet
+  await db.ref('vault_meta').set(meta);
+  await db.ref('vault_items').set({});
+  
+  vItems=[];rndr();gt('s-vault');toast('Kasa bulutta oluşturuldu ✓');
 }
 
-// ── Unlock ──
+// ── Unlock (Firebase) ──
 async function unlock(){
   const pw=document.getElementById('lk-pw').value;
   if(!pw){toast('Şifre gir');return;}
   try{
-    const raw=lsGet(SK);if(!raw)throw new Error();
-    const meta=JSON.parse(raw);
+    const snap = await db.ref('vault_meta').once('value');
+    const meta=snap.val();
+    if(!meta) throw new Error('NoMeta');
+    
     const key=await dkey(pw,b64d(meta.salt));
     const v=await adec(meta.vrf,key);
     if(v!=='AGVAULT_OK_V1')throw new Error('wrong');
+    
     mKey=key;
     await loadItems();
+    document.getElementById('lk-//pw').value=''; // Fixed ID
     document.getElementById('lk-pw').value='';
     gt('s-vault');
-  }catch{toast('Yanlış şifre ❌');}
+  }catch(e){toast('Yanlış şifre veya kasa bulunamadı ❌');}
 }
 
-function showBioInfo(){
-  toast('Gerçek uygulamada parmak izi aktif olurdu. Şifreni kullan.');
-}
-
+function showBioInfo(){toast('Biyometrik giriş bulut versiyonunda desteklenmez. Şifrenizi kullanın.');}
 function lockV(){mKey=null;vItems=[];gt('s-lock');}
 
-function resetVault(){
-  if(!confirm('Tüm şifreler kalıcı olarak silinecek! Emin misin?'))return;
-  lsDel(SK);lsDel(SI);mKey=null;vItems=[];gt('s-setup');toast('Kasa sıfırlandı');
+async function resetVault(){
+  if(!confirm('Tüm bulut verileri kalıcı olarak silinecek! Emin misin?'))return;
+  await db.ref('vault_meta').remove();
+  await db.ref('vault_items').remove();
+  mKey=null;vItems=[];gt('s-setup');toast('Kasa sıfırlandı');
 }
 
-// ── Load / save ──
+// ── Load / Save (Firebase) ──
 async function loadItems(){
   try{
-    const raw=lsGet(SI);if(!raw){vItems=[];return;}
-    const enc_items=JSON.parse(raw);
+    const snap = await db.ref('vault_items').once('value');
+    const raw = snap.val();
+    if(!raw){ vItems=[]; rndr(); return; }
+    
+    const enc_items=Object.values(raw);
     vItems=await Promise.all(enc_items.map(async it=>({
       ...it,
       password:await adec(it.pe,mKey),
@@ -472,13 +479,17 @@ async function loadItems(){
 }
 
 async function persist(){
-  const ep=await Promise.all(vItems.map(async it=>({
-    id:it.id,title:it.title,username:it.username,category:it.category,
-    createdAt:it.createdAt,updatedAt:it.updatedAt,
-    pe:await aenc(it.password||'',mKey),
-    ne:await aenc(it.notes||'',mKey)
-  })));
-  lsSet(SI,JSON.stringify(ep));
+  const ep={};
+  for(let i=0; i<vItems.length; i++){
+    const it = vItems[i];
+    ep[it.id] = {
+      title:it.title,username:it.username,category:it.category,
+      createdAt:it.createdAt,updatedAt:it.updatedAt,
+      pe:await aenc(it.password||'',mKey),
+      ne:await aenc(it.notes||'',mKey)
+    };
+  }
+  await db.ref('vault_items').set(ep);
 }
 
 // ── Filter ──
@@ -520,8 +531,8 @@ function openDetail(id){
   editId=id;
   document.getElementById('dtitle').textContent=it.title;
   document.getElementById('dico').textContent=CIC[it.category]||'🔑';
-  const db=document.getElementById('dbadge');
-  db.textContent=CLB[it.category]||'Diğer';db.className='badge '+(CCL[it.category]||'co');
+  const db_badge=document.getElementById('dbadge');
+  db_badge.textContent=CLB[it.category]||'Diğer';db_badge.className='badge '+(CCL[it.category]||'co');
   document.getElementById('dflds').innerHTML=
     dFld('Kullanıcı Adı',it.username||'—',id,'u',false)+
     dFld('Şifre',it.password||'',id,'p',true)+
@@ -631,22 +642,13 @@ function doCpy(txt){
 // ── Utils ──
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// ── Service Worker (offline cache) ──
-if('serviceWorker' in navigator && window.isSecureContext){
-  const swSrc=`
-const V='agv1';
-self.addEventListener('install',e=>e.waitUntil(caches.open(V).then(c=>c.add(location.pathname||'/'))));
-self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{if(resp&&resp.status===200&&resp.type==='basic'){const c=resp.clone();caches.open(V).then(ca=>ca.put(e.request,c));}return resp;}))));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k))))));
-  `;
-  const blob=new Blob([swSrc],{type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
-}
-
 // ── Init ──
 genPw();
-const hasMeta=!!lsGet(SK);
-gt(hasMeta?'s-lock':'s-setup');
+// Bulut kontrolü ile başlangıç ekranını belirle
+db.ref('vault_meta').once('value', snapshot => {
+  const hasMeta = !!snapshot.val();
+  gt(hasMeta?'s-lock':'s-setup');
+});
 </script>
 </body>
 </html>
