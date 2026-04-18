@@ -9,36 +9,80 @@
 <meta name="apple-mobile-web-app-title" content="AG Vault">
 <meta name="application-name" content="AG Vault">
 <meta name="theme-color" content="#0A0A12">
-<title>Antigravity Vault Cloud - Robust</title>
+<title>Antigravity Vault Cloud</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#0A0A12;--card:#13131E;--card2:#1A1A28;--card3:#222235;--accent:#8B5CF6;--accent2:#7C3AED;--acbg:rgba(139,92,246,0.12);--txt:#EEEEF5;--txt2:#8888A8;--txt3:#505065;--brd:rgba(139,92,246,0.18);--brd2:rgba(255,255,255,0.07);--grn:#10B981;--red:#F87171;--amb:#FBBF24;--r:14px;--rsm:10px;--rxl:22px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
-body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system,sans-serif;overflow:hidden}
-#app{width:100%;max-width:430px;height:100vh;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden}
-.screen{display:none;flex-direction:column;height:100%;position:absolute;top:0;left:0;right:0;bottom:0;animation:fi .2s ease}
+:root{
+  --bg:#0A0A12;--card:#13131E;--card2:#1A1A28;--card3:#222235;
+  --accent:#8B5CF6;--accent2:#7C3AED;--acbg:rgba(139,92,246,0.12);
+  --txt:#EEEEF5;--txt2:#8888A8;--txt3:#505065;
+  --brd:rgba(139,92,246,0.18);--brd2:rgba(255,255,255,0.07);
+  --grn:#10B981;--red:#F87171;--amb:#FBBF24;
+  --r:14px;--rsm:10px;--rxl:22px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+html{height:100%;background:var(--bg)}
+body{
+  height:100%;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,'SF Pro Display','Segoe UI',sans-serif;
+  overflow:hidden;
+}
+#app{
+  width:100%;max-width:430px;height:100vh;
+  margin:0 auto;background:var(--bg);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.screen{
+  display:none;flex-direction:column;
+  height:100%;position:absolute;top:0;left:0;right:0;bottom:0;
+  animation:fi .2s ease;
+}
 .screen.active{display:flex}
 @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.sbar{padding-top:var(--safe-top);height:calc(44px + var(--safe-top));display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 8px;flex-shrink:0}
-.sbar-l{font-size:15px;font-weight:600;color:var(--txt)}.sbar-r{font-size:12px;color:var(--txt2);display:flex;gap:8px;align-items:center}
+.sbar{
+  padding-top:var(--safe-top);
+  height:calc(44px + var(--safe-top));
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 20px 8px;
+  flex-shrink:0;
+}
+.sbar-l{font-size:15px;font-weight:600;color:var(--txt)}
+.sbar-r{font-size:12px;color:var(--txt2);display:flex;gap:8px;align-items:center}
 .scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .scrl::-webkit-scrollbar{display:none}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--rxl);border:none;cursor:pointer;font-size:15px;font-weight:600;transition:all .15s;width:100%;font-family:inherit}
-.btn:active{transform:scale(.97)}.bpri{background:var(--accent);color:#fff}.bpri:hover{background:var(--accent2)}.bghost{background:transparent;color:var(--txt2);border:1.5px solid var(--brd2)}.bghost:hover{background:var(--card2)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--rxl);border:none;cursor:pointer;font-size:15px;font-weight:600;transition:all .15s;outline:none;width:100%;font-family:inherit}
+.btn:active{transform:scale(.97)}
+.bpri{background:var(--accent);color:#fff}
+.bpri:hover{background:var(--accent2)}
+.bghost{background:transparent;color:var(--txt2);border:1.5px solid var(--brd2)}
+.bghost:hover{background:var(--card2)}
 .bico{width:40px;height:40px;border-radius:50%;background:var(--card2);border:1px solid var(--brd2);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .15s;outline:none;flex-shrink:0;padding:0}
 .bico:hover{background:var(--card3);color:var(--txt)}
-.ig{margin-bottom:14px}.lbl{font-size:13px;color:var(--txt2);margin-bottom:6px;display:block;font-weight:500}
+.ig{margin-bottom:14px}
+.lbl{font-size:13px;color:var(--txt2);margin-bottom:6px;display:block;font-weight:500}
 .inp{width:100%;background:var(--card2);border:1.5px solid var(--brd2);border-radius:var(--r);padding:13px 16px;color:var(--txt);font-size:15px;outline:none;transition:border-color .15s;font-family:inherit}
 .inp:focus{border-color:var(--accent)}
-.inprow{position:relative}.inprow .inp{padding-right:50px}
+.inprow{position:relative}
+.inprow .inp{padding-right:50px}
 .ipico{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--txt3);cursor:pointer;font-size:16px;padding:4px;outline:none}
 .card{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;transition:all .15s}
 .card:hover{background:var(--card2);border-color:var(--accent)}
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}.ce{background:rgba(59,130,246,.15);color:#60A5FA}.cs{background:rgba(236,72,153,.15);color:#F472B6}.cb{background:rgba(16,185,129,.15);color:#34D399}.ca{background:rgba(245,158,11,.15);color:#FCD34D}.co{background:rgba(139,92,246,.15);color:#A78BFA}
-.fab{position:absolute;right:20px;bottom:calc(24px + var(--safe-bot));width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(139,92,246,.5);z-index:10}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.ce{background:rgba(59,130,246,.15);color:#60A5FA}
+.cs{background:rgba(236,72,153,.15);color:#F472B6}
+.cb{background:rgba(16,185,129,.15);color:#34D399}
+.ca{background:rgba(245,158,11,.15);color:#FCD34D}
+.co{background:rgba(139,92,246,.15);color:#A78BFA}
+.fab{position:absolute;right:20px;bottom:calc(24px + var(--safe-bot));width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(139,92,246,.5);transition:all .15s;outline:none;z-index:10}
 #toast{position:fixed;bottom:calc(80px + var(--safe-bot));left:50%;transform:translateX(-50%);background:var(--card3);border:1px solid var(--brd);color:var(--txt);padding:10px 20px;border-radius:30px;font-size:13px;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999}
 #toast.show{opacity:1}
 .strbar{height:4px;border-radius:2px;margin-top:8px;background:var(--card3)}.strfill{height:100%;border-radius:2px;transition:all .3s;width:0}
-.trrow{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--brd2)}.toggle{width:44px;height:24px;border-radius:12px;background:var(--card3);border:none;cursor:pointer;position:relative;transition:background .2s}.toggle.on{background:var(--accent)}.tthumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;pointer-events:none}.toggle.on .tthumb{left:23px}
+.trrow{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--brd2)}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--card3);border:none;cursor:pointer;position:relative;transition:background .2s;outline:none}
+.toggle.on{background:var(--accent)}.tthumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;pointer-events:none}
+.toggle.on .tthumb{left:23px}
 .dfld{background:var(--card);border:1.5px solid var(--brd2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
 .dfld-label{font-size:11px;color:var(--txt2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;font-weight:600}
 .empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center}
@@ -49,8 +93,11 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
 <body>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <div id="app">
 <div id="toast"></div>
+
+<!-- SETUP -->
 <div id="s-setup" class="screen">
   <div class="sbar"><span class="sbar-l">9:41</span><span class="sbar-r">●●●</span></div>
   <div class="scrl" style="padding:0 20px 32px">
@@ -59,21 +106,48 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
       <div style="font-size:24px;font-weight:700;margin-bottom:8px">AG Vault Cloud</div>
       <div style="color:var(--txt2);font-size:13px;line-height:1.6">Master şifre oluştur.<br>Sadece sizin bildiğiniz anahtar.</div>
     </div>
-    <div class="ig"><label class="lbl">Master Şifre</label><div class="inprow"><input type="password" id="su-pw" class="inp" placeholder="En az 8 karakter..." oninput="chkStr()"> <button class="ipico" onclick="tvs('su-pw',this)">👁</button></div><div class="strbar"><div class="strfill" id="sfill"></div></div><div style="font-size:12px;margin-top:5px" id="slbl"></div></div>
-    <div class="ig"><label class="lbl">Tekrar Gir</label><div class="inprow"><input type="password" id="su-pw2" class="inp" placeholder="Şifreyi tekrar gir..."><button class="ipico" onclick="tvs('su-pw2',this)">👁</button></div></div>
+    <div class="ig">
+      <label class="lbl">Master Şifre</label>
+      <div class="inprow">
+        <input type="password" id="su-pw" class="inp" placeholder="En az 8 karakter..." oninput="chkStr()">
+        <button class="ipico" onclick="tvs('su-pw',this)">👁</button>
+      </div>
+      <div class="strbar"><div class="strfill" id="sfill"></div></div>
+      <div style="font-size:12px;margin-top:5px" id="slbl"></div>
+    </div>
+    <div class="ig">
+      <label class="lbl">Tekrar Gir</label>
+      <div class="inprow">
+        <input type="password" id="su-pw2" class="inp" placeholder="Şifreyi tekrar gir..."><button class="ipico" onclick="tvs('su-pw2',this)">👁</button>
+      </div>
+    </div>
     <button class="btn bpri" onclick="setupVault()">Kasayı Oluştur</button>
   </div>
 </div>
+
+<!-- LOCK -->
 <div id="s-lock" class="screen">
   <div class="sbar"><span class="sbar-l">9:41</span><span class="sbar-r">●●●</span></div>
   <div style="flex:1;padding:20px;display:flex;flex-direction:column;justify-content:center;padding-bottom:calc(32px + var(--safe-bot))">
     <div style="width:76px;height:76px;background:var(--acbg);border:1.5px solid var(--brd);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 18px">🔒</div>
-    <div style="text-align:center;margin-bottom:32px"><div style="font-size:22px;font-weight:700;margin-bottom:6px">Antigravity Vault</div><div style="color:var(--txt2);font-size:13px">Master şifreni gir</div></div>
-    <div class="ig"><div class="inprow"><input type="password" id="lk-pw" class="inp" placeholder="Master şifre..." onkeydown="if(event.key==='Enter')unlock()"><button class="ipico" onclick="tvs('lk-pw',this)">👁</button></div></div>
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:22px;font-weight:700;margin-bottom:6px">Antigravity Vault</div>
+      <div style="color:var(--txt2);font-size:13px">Master şifreni gir</div>
+    </div>
+    <div class="ig">
+      <div class="inprow">
+        <input type="password" id="lk-pw" class="inp" placeholder="Master şifre..." onkeydown="if(event.key==='Enter')unlock()">
+        <button class="ipico" onclick="tvs('lk-pw',this)">👁</button>
+      </div>
+    </div>
     <button class="btn bpri" style="margin-bottom:10px" onclick="unlock()">Kilidi Aç</button>
-    <div style="text-align:center;margin-top:20px"><button onclick="resetVault()" style="background:none;border:none;color:var(--txt3);font-size:12px;cursor:pointer">Kasayı Sıfırla</button></div>
+    <div style="text-align:center;margin-top:20px">
+      <button onclick="resetVault()" style="background:none;border:none;color:var(--txt3);font-size:12px;cursor:pointer">Kasayı Sıfırla</button>
+    </div>
   </div>
 </div>
+
+<!-- VAULT -->
 <div id="s-vault" class="screen">
   <div class="sbar"><span class="sbar-l">Kasam</span><span class="sbar-r"><span id="ic" style="color:var(--accent);font-weight:600"></span></span></div>
   <div class="shdr">
@@ -81,19 +155,24 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
       <div style="font-size:26px;font-weight:700">Şifrelerim</div>
       <div style="display:flex;gap:8px"><button class="bico" onclick="gt('s-gen')">⚡</button><button class="bico" onclick="lockV()">🔒</button></div>
     </div>
-    <div class="inprow" style="margin-bottom:8px"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:15px;pointer-events:none">🔍</span><input type="search" id="srch" class="inp" style="padding-left:42px" placeholder="Ara..." oninput="rndr()"></div>
+    <div class="inprow" style="margin-bottom:8px">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:15px;pointer-events:none">🔍</span>
+      <input type="search" id="srch" class="inp" style="padding-left:42px" placeholder="Ara..." oninput="rndr()">
+    </div>
     <div class="catscrl" id="catf">
       <button id="f-all" class="badge" style="cursor:pointer;border:1.5px solid var(--accent);background:var(--acbg);color:var(--accent);white-space:nowrap;padding:5px 12px" onclick="sflt('')">Tümü</button>
       <button id="f-email" class="badge ce" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('email')">E-posta</button>
       <button id="f-social" class="badge cs" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('social')">Sosyal</button>
       <button id="f-bank" class="badge cb" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('bank')">Banka</button>
       <button id="f-api" class="badge ca" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('api')">API</button>
-      <button id="f-other" class="badge co" style="cursor:pointer;white-//space:nowrap;padding:5px 12px" onclick="sflt('other')">Diğer</button>
+      <button id="f-other" class="badge co" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('other')">Diğer</button>
     </div>
   </div>
   <div class="scrl" style="padding:2px 20px calc(90px + var(--safe-bot))" id="ilist"></div>
   <button class="fab" onclick="openAdd()">+</button>
 </div>
+
+<!-- FORM -->
 <div id="s-form" class="screen">
   <div class="sbar">
     <div style="display:flex;align-items:center;gap:12px"><button class="bico" onclick="gt('s-vault')">←</button><span style="font-size:19px;font-weight:700" id="ftitle">Yeni Şifre</span></div>
@@ -102,7 +181,7 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
     <div class="ig"><label class="lbl">Site / Uygulama Adı *</label><input type="text" id="f-t" class="inp" placeholder="Gmail, Instagram..."></div>
     <div class="ig"><label class="lbl">Kategori</label><select id="f-c" class="inp"><option value="other">Diğer</option><option value="email">E-posta</option><option value="social">Sosyal Medya</option><option value="bank">Banka / Finans</option><option value="api">API / Geliştirici</option></select></div>
     <div class="ig"><label class="lbl">Kullanıcı Adı</label><input type="text" id="f-u" class="inp" placeholder="kullanici@ornek.com"></div>
-    <div class="ig"><label class="lbl">Şifre</label><div class="inprow"><input type="password" id="f-p" class="inp" style="padding-right:84px"><div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:4px"><button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tvs('f-p',this)">👁</button><button class="b,ico" style="width:32px;height:32px;font-size:13px;background:var(--acbg)" onclick="genInto()">⚡</button></div></div></div>
+    <div class="ig"><label class="lbl">Şifre</label><div class="inprow"><input type="password" id="f-p" class="inp" style="padding-right:84px"><div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:4px"><button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tvs('f-p',this)">👁</button><button class="bico" style="width:32px;height:32px;font-size:13px;background:var(--acbg)" onclick="genInto()">⚡</button></div></div></div>
     <div class="ig"><label class="lbl">Not</label><textarea id="f-n" class="inp" rows="3" style="resize:none"></textarea></div>
     <button class="btn bpri" onclick="saveE()" id="sbtn">Kaydet</button>
     <button id="dbtn" class="btn bghost" style="margin-top:10px;display:none;color:var(--red)" onclick="delEConfirm()">Kaydı Sil</button>
@@ -112,6 +191,8 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
     </div>
   </div>
 </div>
+
+<!-- DETAIL -->
 <div id="s-detail" class="screen">
   <div class="sbar">
     <div style="display:flex;align-items:center;gap:12px"><button class="bico" onclick="gt('s-vault')">←</button><span style="font-size:19px;font-weight:700;max-width:220px;overflow:hidden;text-overflow:ellipsis" id="dtitle"></span></div>
@@ -122,6 +203,8 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
     <div id="dflds"></div>
   </div>
 </div>
+
+<!-- GENERATOR -->
 <div id="s-gen" class="screen">
   <div class="sbar"><div style="display:flex;align-items:center;gap:12px"><button class="bico" onclick="gt('s-vault')">←</button><span style="font-size:19px;font-weight:700">Şifre Üretici</span></div></div>
   <div class="scrl" style="padding:4px 20px calc(24px + var(--safe-bot))">
@@ -147,13 +230,25 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
 
 <script>
 'use strict';
-const firebaseConfig = { apiKey: "AIzaSyA5N2FSLqPicNeBaBi3Ehj0iPG6HOUD98", authDomain: "veriler-7a724.firebaseapp.com", databaseURL: "https://veriler-7a724-default-rtdb.firebaseio.com", projectId: "veriler-7a724", storageBucket: "veriler-7a724.appspot.com", messagingSenderId: "17059149175", appId: "1:17059149175:web:3bab6f4a5fece2819755" };
+
+// ==================== FIREBASE CONFIG ====================
+const firebaseConfig = {
+  apiKey: "AIzaSyA5N2FSLqPicNeBaBi3Ehj0iPG6HOUD98",
+  authDomain: "veriler-7a724.firebaseapp.com",
+  databaseURL: "https://veriler-7a724-default-rtdb.firebaseio.com",
+  projectId: "veriler-7a724",
+  storageBucket: "veriler-7a724.appspot.com",
+  messagingSenderId: "17059149175",
+  appId: "1:17059149175:web:3bab6f4a5fece2819755"
+};
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
 const ENC=new TextEncoder(),DEC=new TextDecoder();
 let mKey=null,vItems=[],editId=null,actFlt='',cbTimer=null;
 const CLB={email:'E-posta',social:'Sosyal',bank:'Banka',api:'API',other:'Diğer'},CIC={email:'📧',social:'💬',bank:'🏦',api:'⚙️',other:'🔑'},CCL={email:'ce',social:'cs',bank:'cb',api:'ca',other:'co'};
 
+// Crypto Logic
 async function dkey(pw,salt){
   const km=await crypto.subtle.importKey('raw',ENC.encode(pw),'PBKDF2',false,['deriveKey']);
   return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
@@ -238,7 +333,7 @@ function rndr(){
   if(!filtered.length){
     list.innerHTML=`<div class="empty"><div style="font-size:48px;opacity:.25">${!vItems.length?'🔐':'🔍'}</div><div style="font-size:15px;font-weight:600;color:var(--txt2)">${!vItems.length?'Kasa Boş':'Sonuç Yok'}</div></div>`;return;
   }
-  list.innerHTML=filtered.map(it=>`<div class="card" onclick="openDetail('${it.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:14px;background:var(--acbg);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${CIC[it.category]||'🔑'}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;margin-bottom:2px">${esc(it.title)}</div><div style="font-size:12px;color:var(--txt2)">${esc(it.username)||'—'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="badge ${CCL[it.category]||'co'}">${CLB[it.category]||'Diğer'}</span><button style="background:none;border:none;color:var(--txt3);cursor:pointer" onclick="event.stopPropagation();doCpy(vItems.find(x=>x.id==='${it.id}')?.password||'')">📋</button></div></div>`).join('');
+  list.innerHTML=filtered.map(it=>`<div class="card" onclick="openDetail('${it.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:14px;background:var(--acbg);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${CIC[it.category]||'🔑'}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;margin-bottom:2px">${esc(it.title)}</div><div style="font-size:12px;color:var(--txt2)">${esc(it.username)||'—'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="badge ${CCL[it.category]||'co'}">${CLB[it.category]||'Diğer'}</span><button style="background:none;border:none;color:var(--txt3);cursor:pointer" onclick="event.stopPropagation();doCpy(vItems.find(x=>x.id==='${it.id}')?.password||'')">📋</button></div></div></div>`).join('');
 }
 
 function openDetail(id){
@@ -250,7 +345,7 @@ function openDetail(id){
   gt('s-detail');
 }
 function dFld(lbl,val,id,fld,isPw){
-  return`<div class="dfld"><div class="dfld-label">${lbl}</div><div style="display:flex;align-items:center;gap:10px"><div id="dv-${id}-${fld}" style="flex:1;font-size:14px;color:var(--txt);${isPw?'font-family:monospace':''}">${isPw?'••••••••••':esc(val)}</div><div style="display:flex;gap:6px">${isPw?`<button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tFV('${id}','${fld}','${esc(val).replace(/'/g,'\\x27')}')">👁</button>`:''} <button class="bico" style="width:32px;height:32px;font-size:13px" onclick="doCpy('${esc(val).replace(/'/g,'\\x27')}')">📋</button></div></div></div>`;
+  return`<div class="dfld"><div class="dfld-label">${lbl}</div><div style="display:flex;align-items:center;gap:10px"><div id="dv-${id}-${fld}" style="flex:1;font-size:14px;color:var(--txt);${isPw?'font-family:monospace':''}"> ${isPw?'••••••••••':esc(val)}</div><div style="display:flex;gap:6px">${isPw?`<button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tFV('${id}','${fld}','${esc(val).replace(/'/g,'\\x27')}')">👁</button>`:''} <button class="bico" style="width:32px;height:32px;font-size:13px" onclick="doCpy('${esc(val).replace(/'/g,'\\x27')}')">📋</button></div></div></div>`;
 }
 function tFV(id,fld,val){const k=id+fld;fvState[k]=!fvState[k];document.getElementById('dv-'+id+'-'+fld).textContent=fvState[k]?val:'••••••••••';}
 
@@ -259,7 +354,6 @@ function openAdd(){
   ['f-t','f-u','f-p','f-n'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-c').value='other';document.getElementById('sbtn').textContent='Kaydet';
   document.getElementById('dbtn').style.display='none';document.getElementById('delconf').style.display='none';
-  gt('s-//form'); // Fix ID
   gt('s-form');
 }
 function openEdit(){
@@ -285,7 +379,7 @@ async function saveE(){
 }
 
 function delEConfirm(){document.getElementById('delconf').style.display='block';}
-async function delE(){vItems=vItems.filter(i=>i.id!==editId);await persist();rndr();gt('s-vault');toast('Silindi');}
+async function delE(){vItems=vItems.filter(i=>i.id!==editId);await persist();rndr();gt('s-vault');toast('Sildi');}
 
 const UP='ABCDEFGHIJKLMNOPQRSTUVWXYZ',LO='abcdefghijklmnopqrstuvwxyz',NU='0123456789',SY='!@#$%^&*()_+-=[];:,.<>?';
 function genPw(){
