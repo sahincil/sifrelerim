@@ -7,8 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AG Vault">
+<meta name="application-name" content="AG Vault">
 <meta name="theme-color" content="#0A0A12">
-<title>Antigravity Vault Cloud</title>
+<title>Antigravity Vault Cloud - Robust</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#0A0A12;--card:#13131E;--card2:#1A1A28;--card3:#222235;--accent:#8B5CF6;--accent2:#7C3AED;--acbg:rgba(139,92,246,0.12);--txt:#EEEEF5;--txt2:#8888A8;--txt3:#505065;--brd:rgba(139,92,246,0.18);--brd2:rgba(255,255,255,0.07);--grn:#10B981;--red:#F87171;--amb:#FBBF24;--r:14px;--rsm:10px;--rxl:22px;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)}
@@ -87,7 +88,7 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
       <button id="f-social" class="badge cs" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('social')">Sosyal</button>
       <button id="f-bank" class="badge cb" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('bank')">Banka</button>
       <button id="f-api" class="badge ca" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('api')">API</button>
-      <button id="f-other" class="badge co" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('other')">Diğer</button>
+      <button id="f-other" class="badge co" style="cursor:pointer;white-//space:nowrap;padding:5px 12px" onclick="sflt('other')">Diğer</button>
     </div>
   </div>
   <div class="scrl" style="padding:2px 20px calc(90px + var(--safe-bot))" id="ilist"></div>
@@ -101,12 +102,12 @@ body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system
     <div class="ig"><label class="lbl">Site / Uygulama Adı *</label><input type="text" id="f-t" class="inp" placeholder="Gmail, Instagram..."></div>
     <div class="ig"><label class="lbl">Kategori</label><select id="f-c" class="inp"><option value="other">Diğer</option><option value="email">E-posta</option><option value="social">Sosyal Medya</option><option value="bank">Banka / Finans</option><option value="api">API / Geliştirici</option></select></div>
     <div class="ig"><label class="lbl">Kullanıcı Adı</label><input type="text" id="f-u" class="inp" placeholder="kullanici@ornek.com"></div>
-    <div class="ig"><label class="lbl">Şifre</label><div class="inprow"><input type="password" id="f-p" class="inp" style="padding-right:84px"><div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:4px"><button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tvs('f-p',this)">👁</button><button class="bico" style="width:32px;height:32px;font-size:13px;background:var(--acbg)" onclick="genInto()">⚡</button></div></div></div>
+    <div class="ig"><label class="lbl">Şifre</label><div class="inprow"><input type="password" id="f-p" class="inp" style="padding-right:84px"><div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:4px"><button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tvs('f-p',this)">👁</button><button class="b,ico" style="width:32px;height:32px;font-size:13px;background:var(--acbg)" onclick="genInto()">⚡</button></div></div></div>
     <div class="ig"><label class="lbl">Not</label><textarea id="f-n" class="inp" rows="3" style="resize:none"></textarea></div>
     <button class="btn bpri" onclick="saveE()" id="sbtn">Kaydet</button>
     <button id="dbtn" class="btn bghost" style="margin-top:10px;display:none;color:var(--red)" onclick="delEConfirm()">Kaydı Sil</button>
     <div id="delconf" style="display:none;background:rgba(248,113,113,.08);border:1.5px solid rgba(248,113,113,.25);border-radius:var(--r);padding:16px;margin-top:10px;text-align:center">
-      <div style="font-size:13px;color:var(--txt2);margin-bottom:12px">Kalıcı olarak silinsin mi?</div>
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:12px">Sileceğinizden emin misiniz?</div>
       <div style="display:flex;gap:8px"><button class="btn bghost" style="flex:1" onclick="document.getElementById('delconf').style.display='none'">İptal</button><button class="btn" style="flex:1;background:var(--red);color:#fff;border:none;border-radius:var(--rxl)" onclick="delE()">Sil</button></div>
     </div>
   </div>
@@ -163,8 +164,10 @@ async function aenc(txt,key){
   return{iv:b64e(iv),ct:b64e(new Uint8Array(ct))};
 }
 async function adec(d,key){
-  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(d.iv)},key,b64d(d.ct));
-  return DEC.decode(pt);
+  try{
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(d.iv)},key,b64d(d.ct));
+    return DEC.decode(pt);
+  }catch(e){return '[Hatalı]';}
 }
 const b64e=u=>btoa(String.fromCharCode(...u)),b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)),uid=()=>crypto.randomUUID();
 
@@ -183,42 +186,45 @@ async function setupVault(){
   const pw=document.getElementById('su-pw').value.trim(),pw2=document.getElementById('su-pw2').value;
   if(pw.length<8){toast('Şifre en az 8 karakter olmalı');return;}
   if(pw!==pw2){toast('Şifreler eşleşmiyor');return;}
-  const salt=crypto.getRandomValues(new Uint8Array(16));
-  mKey=await dkey(pw,salt);
-  const vrf=await aenc('AGVAULT_OK_V1',mKey);
-  await db.ref('vault_meta').set({salt:b64e(salt),vrf});
-  await db.ref('vault_items').set({});
-  vItems=[];rndr();gt('s-vault');toast('Kasa bulutta oluşturuldu ✓');
+  try {
+    const salt=crypto.getRandomValues(new Uint8Array(16));
+    mKey=await dkey(pw,salt);
+    const vrf=await aenc('AGVAULT_OK_V1',mKey);
+    await db.ref('vault_meta').set({salt:b64e(salt),vrf});
+    await db.ref('vault_items').set({});
+    vItems=[];rndr();gt('s-vault');toast('Kasa bulutta oluşturuldu ✓');
+  } catch(e) { toast('Hata oluştu'); }
 }
 
 async function unlock(){
   const pw=document.getElementById('lk-pw').value;
   if(!pw){toast('Şifre gir');return;}
-  try{
+  try {
     const snap=await db.ref('vault_meta').once('value');const meta=snap.val();
     if(!meta)throw 0;
     const key=await dkey(pw,b64d(meta.salt));
     if(await adec(meta.vrf,key)!=='AGVAULT_OK_V1')throw 0;
     mKey=key;await loadItems();gt('s-vault');
-  }catch{toast('Yanlış şifre ❌');}
+  } catch(e) {toast('Yanlış şifre veya kasa bulunamadı ❌');}
 }
 
 async function loadItems(){
-  try{
+  try {
     const snap=await db.ref('vault_items').once('value');const raw=snap.val();
     if(!raw){vItems=[];rndr();return;}
-    vItems=await Promise.all(Object.values(raw).map(async it=>({
+    const enc_items=Object.values(raw);
+    vItems=await Promise.all(enc_items.map(async it=>({
       ...it,password:await adec(it.pe,mKey),notes:it.ne?await adec(it.ne,mKey):'',pe:undefined,ne:undefined
     })));
     rndr();
-  }catch(e){vItems=[];rndr();}
+  } catch(e) {vItems=[];rndr();}
 }
 
 async function persist(){
   const ep={};
   for(let i=0; i<vItems.length; i++){
-    const it=vItems[i];
-    ep[it.id]={title:it.title,username:it.username,category:it.category,createdAt:it.createdAt,updatedAt:it.updatedAt,pe:await aenc(it.password||'',mKey),ne:await aenc(it.notes||'',mKey)};
+    const it = vItems[i];
+    ep[it.id] = {title:it.title,username:it.username,category:it.category,createdAt:it.createdAt,updatedAt:it.updatedAt,pe:await aenc(it.password||'',mKey),ne:await aenc(it.notes||'',mKey)};
   }
   await db.ref('vault_items').set(ep);
 }
@@ -232,7 +238,7 @@ function rndr(){
   if(!filtered.length){
     list.innerHTML=`<div class="empty"><div style="font-size:48px;opacity:.25">${!vItems.length?'🔐':'🔍'}</div><div style="font-size:15px;font-weight:600;color:var(--txt2)">${!vItems.length?'Kasa Boş':'Sonuç Yok'}</div></div>`;return;
   }
-  list.innerHTML=filtered.map(it=>`<div class="card" onclick="openDetail('${it.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:14px;background:var(--acbg);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${CIC[it.category]||'🔑'}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;margin-bottom:2px">${esc(it.title)}</div><div style="font-size:12px;color:var(--txt2)">${esc(it.username)||'—'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="badge ${CCL[it.category]||'co'}">${CLB[it.category]||'Diğer'}</span><button style="background:none;border:none;color:var(--txt3);cursor:pointer" onclick="event.stopPropagation();doCpy(vItems.find(x=>x.id==='${it.id}')?.password||'')">📋</button></div></div></div>`).join('');
+  list.innerHTML=filtered.map(it=>`<div class="card" onclick="openDetail('${it.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:14px;background:var(--acbg);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${CIC[it.category]||'🔑'}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;margin-bottom:2px">${esc(it.title)}</div><div style="font-size:12px;color:var(--txt2)">${esc(it.username)||'—'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="badge ${CCL[it.category]||'co'}">${CLB[it.category]||'Diğer'}</span><button style="background:none;border:none;color:var(--txt3);cursor:pointer" onclick="event.stopPropagation();doCpy(vItems.find(x=>x.id==='${it.id}')?.password||'')">📋</button></div></div>`).join('');
 }
 
 function openDetail(id){
@@ -248,8 +254,27 @@ function dFld(lbl,val,id,fld,isPw){
 }
 function tFV(id,fld,val){const k=id+fld;fvState[k]=!fvState[k];document.getElementById('dv-'+id+'-'+fld).textContent=fvState[k]?val:'••••••••••';}
 
-function openAdd(){editId=null;document.getElementById('ftitle').textContent='Yeni Şifre';['f-t','f-u','f-p','f-n'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-c').value='other';document.getElementById('sbtn').textContent='Kaydet';document.getElementById('dbtn').style.display='none';document.getElementById('delconf').style.display='none';gt('s-form');}
-function openEdit(){const it=vItems.find(i=>i.id===editId);if(!it)return;document.getElementById('ftitle').textContent='Düzenle';document.getElementById('f-t').value=it.title;document.getElementById('f-c').value=it.category||'other';document.getElementById('f-u').value=it.username||'';document.getElementById('f-p').value=it.password||'';document.getElementById('f-n').value=it.notes||'';document.getElementById('sbtn').textContent='Güncelle';document.getElementById('dbtn').style.display='flex';document.getElementById('delconf').style.display='none';gt('s-form');}
+function openAdd(){
+  editId=null;document.getElementById('ftitle').textContent='Yeni Şifre';
+  ['f-t','f-u','f-p','f-n'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-c').value='other';document.getElementById('sbtn').textContent='Kaydet';
+  document.getElementById('dbtn').style.display='none';document.getElementById('delconf').style.display='none';
+  gt('s-//form'); // Fix ID
+  gt('s-form');
+}
+function openEdit(){
+  const it=vItems.find(i=>i.id===editId);if(!it)return;
+  document.getElementById('ftitle').textContent='Düzenle';
+  document.getElementById('f-t').value=it.title;
+  document.getElementById('f-c').value=it.category||'other';
+  document.getElementById('f-u').value=it.username||'';
+  document.getElementById('f-p').value=it.password||'';
+  document.getElementById('f-n').value=it.notes||'';
+  document.getElementById('sbtn').textContent='Güncelle';
+  document.getElementById('dbtn').style.display='flex';
+  document.getElementById('delconf').style.display='none';
+  gt('s-form');
+}
 
 async function saveE(){
   const title=document.getElementById('f-t').value.trim();if(!title){toast('Site adı gerekli');return;}
@@ -265,43 +290,39 @@ async function delE(){vItems=vItems.filter(i=>i.id!==editId);await persist();rnd
 const UP='ABCDEFGHIJKLMNOPQRSTUVWXYZ',LO='abcdefghijklmnopqrstuvwxyz',NU='0123456789',SY='!@#$%^&*()_+-=[];:,.<>?';
 function genPw(){
   const len=parseInt(document.getElementById('glen').value);let cs='';
-  if(document.getElementById('tu').classList.contains('on'))cs+=UP;if(document.getElementById('tl').classList.contains('on'))cs+=LO;if(document.getElementById('tn').classList.contains('on'))cs+=NU;if(document.getElementById('ts').classList.contains('on'))cs+=SY;
+  if(document.getElementById('tu').classList.contains('on'))cs+=UP;
+  if(document.getElementById('tl').classList.contains('on'))cs+=LO;
+  if(document.getElementById('tn').classList.contains('on'))cs+=NU;
+  if(document.getElementById('ts').classList.contains('on'))cs+=SY;
   if(!cs)cs=LO;const arr=new Uint32Array(len);crypto.getRandomValues(arr);
   const pw=Array.from(arr).map(n=>cs[n%cs.length]).join('');document.getElementById('gpw').textContent=pw;
   const bits=Math.log2(cs.length)*len;const sl=document.getElementById('gstr');
-  const[lbl,col]=bits<40?['Zayıf','#F87171']:bits<60?['Orta','#FBBF24']:bits<
-        bits<80?['Güçlü','#10B981']:['Çok Güçlü','#8B5CF6'];
-        sl.textContent=lbl+' — '+Math.round(bits)+' bit entropi';sl.style.color=col;
-        return pw;
-    }
-    function cpyGen(){const pw=document.getElementById('gpw').textContent;if(pw!=='-')doCpy(pw);}
-    function topt(b){b.classList.toggle('on');}
-    function genInto(){
-      const cs=UP+LO+NU+SY;const arr=new Uint32Array(16);crypto.getRandomValues(arr);
-      const pw=Array.from(arr).map(n=>cs[n%cs.length]).join('');
-      const i=document.getElementById('f-p');i.value=pw;i.type='text';
-      toast('Şifre üretildi ✓ (3sn sonra gizlenir)');
-      setTimeout(()=>{i.type='password';},3000);
-    }
+  const[lbl,col]=bits<40?['Zayıf','#F87171']:bits<60?['Orta','#FBBF24']:bits<80?['Güçlü','#10B981']:['Çok Güçlü','#8B5CF6'];
+  sl.textContent=lbl+' — '+Math.round(bits)+' bit entropi';sl.style.color=col;
+}
+function cpyGen(){const pw=document.getElementById('gpw').textContent;if(pw!=='-')doCpy(pw);}
+function topt(b){b.classList.toggle('on');}
+function genInto(){
+  const cs=UP+LO+NU+SY;const arr=new Uint32Array(16);crypto.getRandomValues(arr);
+  const pw=Array.from(arr).map(n=>cs[n%cs.length]).join('');
+  const i=document.getElementById('f-p');i.value=pw;i.type='text';
+  toast('Şifre üretildi ✓');setTimeout(()=>{i.type='password';},3000);
+}
 
-    // ── Clipboard ──
-    function doCpy(txt){
-      const ok=()=>{ toast('Kopyalandı 📋  — 15sn sonra temizlenir');if(cbTimer)clearTimeout(cbTimer);cbTimer=setTimeout(()=>navigator.clipboard?.writeText('').catch(()=>{}),15000);};
-      const fb=()=>{try{const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;left:-9999px;top:-9999px';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();}catch{toast('Kopyalama başarısız');}};
-      if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(ok).catch(fb);
-      else fb();
-    }
+function doCpy(txt){
+  const ok=()=>{ toast('Kopyalandı 📋');if(cbTimer)clearTimeout(cbTimer);cbTimer=setTimeout(()=>navigator.clipboard?.writeText('').catch(()=>{}),15000);};
+  const fb=()=>{try{const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;left:-9999px;top:-9999px';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();}catch{toast('Kopyalama başarısız');}};
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(ok).catch(fb);
+  else fb();
+}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-    // ── Utils ──
-    function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-    // ── Init ──
-    genPw();
-    // Bulut kontrolü ile başlangıç ekranını belirle
-    db.ref('vault_meta').once('value', snapshot => {
-      const hasMeta = !!snapshot.val();
-      gt(hasMeta?'s-lock':'s-setup');
-    });
+// Init
+genPw();
+db.ref('vault_meta').once('value', snapshot => {
+  const hasMeta = !!snapshot.val();
+  gt(hasMeta?'s-lock':'s-setup');
+});
 </script>
 </body>
 </html>
