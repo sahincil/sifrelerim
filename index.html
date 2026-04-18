@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AG Vault">
+<meta name="application-name" content="AG Vault">
+<meta name="theme-color" content="#0A0A12">
+<meta name="description" content="Güvenli şifre yöneticisi — AES-256 şifreleme">
+<title>Antigravity Vault</title>
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Antigravity%20Vault%22%2C%22short_name%22%3A%22AG%20Vault%22%2C%22description%22%3A%22G%C3%BCvenli%20%C5%9Fifre%20y%C3%B6neticisi%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230A0A12%22%2C%22theme_color%22%3A%22%230A0A12%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D'http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg'%2520viewBox%253D'0%25200%2520192%2520192'%253E%253Crect%2520width%253D'192'%2520height%253D'192'%2520rx%253D'40'%2520fill%253D'%25230A0A12'%252F%253E%253Ctext%2520y%253D'140'%2520x%253D'96'%2520text-anchor%253D'middle'%2520font-size%253D'110'%253E%25F0%259F%2594%2590%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+:root{
+  --bg:#0A0A12;--card:#13131E;--card2:#1A1A28;--card3:#222235;
+  --accent:#8B5CF6;--accent2:#7C3AED;--acbg:rgba(139,92,246,0.12);
+  --txt:#EEEEF5;--txt2:#8888A8;--txt3:#505065;
+  --brd:rgba(139,92,246,0.18);--brd2:rgba(255,255,255,0.07);
+  --grn:#10B981;--red:#F87171;--amb:#FBBF24;
+  --r:14px;--rsm:10px;--rxl:22px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+html{height:100%;background:var(--bg)}
+body{
+  height:100%;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,'SF Pro Display','Segoe UI',sans-serif;
+  overflow:hidden;
+}
+#app{
+  width:100%;max-width:430px;height:100vh;
+  margin:0 auto;background:var(--bg);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.screen{
+  display:none;flex-direction:column;
+  height:100%;position:absolute;top:0;left:0;right:0;bottom:0;
+  animation:fi .2s ease;
+}
+.screen.active{display:flex}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.sbar{
+  padding-top:var(--safe-top);
+  height:calc(44px + var(--safe-top));
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding-left:20px;padding-right:20px;padding-bottom:8px;
+  flex-shrink:0;
+}
+.sbar-l{font-size:15px;font-weight:600;color:var(--txt)}
+.sbar-r{font-size:12px;color:var(--txt2);display:flex;gap:8px;align-items:center}
+
+.scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.scrl::-webkit-scrollbar{display:none}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--rxl);border:none;cursor:pointer;font-size:15px;font-weight:600;transition:transform .12s,background .15s;outline:none;width:100%;font-family:inherit}
+.btn:active{transform:scale(.97)}
+.bpri{background:var(--accent);color:#fff}
+.bpri:hover{background:var(--accent2)}
+.bghost{background:transparent;color:var(--txt2);border:1.5px solid var(--brd2)}
+.bghost:hover{background:var(--card2)}
+.bico{width:40px;height:40px;border-radius:50%;background:var(--card2);border:1px solid var(--brd2);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .15s;outline:none;flex-shrink:0;padding:0}
+.bico:hover{background:var(--card3);color:var(--txt)}
+.bico:active{transform:scale(.93)}
+
+/* Inputs */
+.ig{margin-bottom:14px}
+.lbl{font-size:13px;color:var(--txt2);margin-bottom:6px;display:block;font-weight:500}
+.inp{width:100%;background:var(--card2);border:1.5px solid var(--brd2);border-radius:var(--r);padding:13px 16px;color:var(--txt);font-size:15px;outline:none;transition:border-color .15s;font-family:inherit;-webkit-appearance:none;appearance:none}
+.inp:focus{border-color:var(--accent)}
+select.inp{cursor:pointer}
+.inprow{position:relative}
+.inprow .inp{padding-right:50px}
+.ipico{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--txt3);cursor:pointer;font-size:16px;padding:4px;outline:none}
+
+/* Cards */
+.card{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;transition:all .15s}
+.card:hover{background:var(--card2);border-color:var(--accent)}
+.card:active{transform:scale(.98)}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.4px}
+.ce{background:rgba(59,130,246,.15);color:#60A5FA}
+.cs{background:rgba(236,72,153,.15);color:#F472B6}
+.cb{background:rgba(16,185,129,.15);color:#34D399}
+.ca{background:rgba(245,158,11,.15);color:#FCD34D}
+.co{background:rgba(139,92,246,.15);color:#A78BFA}
+
+/* FAB */
+.fab{
+  position:absolute;
+  right:20px;
+  bottom:calc(24px + var(--safe-bot));
+  width:56px;height:56px;border-radius:50%;
+  background:var(--accent);border:none;color:#fff;
+  font-size:28px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(139,92,246,.5);
+  transition:all .15s;outline:none;line-height:1;
+  z-index:10;
+}
+.fab:active{transform:scale(.93)}
+
+/* Toast */
+#toast{
+  position:fixed;
+  bottom:calc(80px + var(--safe-bot));
+  left:50%;transform:translateX(-50%);
+  background:var(--card3);border:1px solid var(--brd);
+  color:var(--txt);padding:10px 20px;border-radius:30px;
+  font-size:13px;white-space:nowrap;opacity:0;
+  transition:opacity .3s;pointer-events:none;z-index:9999;
+}
+#toast.show{opacity:1}
+
+/* Strength bar */
+.strbar{height:4px;border-radius:2px;margin-top:8px;background:var(--card3)}
+.strfill{height:100%;border-radius:2px;transition:all .3s;width:0}
+
+/* Toggle */
+.trrow{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--brd2)}
+.trrow:last-child{border-bottom:none}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--card3);border:none;cursor:pointer;position:relative;transition:background .2s;outline:none;flex-shrink:0}
+.toggle.on{background:var(--accent)}
+.tthumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;pointer-events:none}
+.toggle.on .tthumb{left:23px}
+
+/* Detail field */
+.dfld{background:var(--card);border:1.5px solid var(--brd2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.dfld-label{font-size:11px;color:var(--txt2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;font-weight:600}
+
+/* Empty state */
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center}
+
+/* Category scroll */
+.catscrl{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;-webkit-overflow-scrolling:touch}
+.catscrl::-webkit-scrollbar{display:none}
+
+/* Section header */
+.shdr{padding:0 20px;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="toast"></div>
+
+<!-- ══════════ SETUP ══════════ -->
+<div id="s-setup" class="screen">
+  <div class="sbar"><span class="sbar-l">9:41</span><span class="sbar-r">●●●</span></div>
+  <div class="scrl" style="padding:0 20px 32px">
+    <div style="text-align:center;margin:16px 0 28px">
+      <div style="width:76px;height:76px;background:var(--acbg);border:1.5px solid var(--brd);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px">🔐</div>
+      <div style="font-size:24px;font-weight:700;margin-bottom:8px">Antigravity Vault</div>
+      <div style="color:var(--txt2);font-size:13px;line-height:1.6">Master şifre oluştur.<br>Bu şifre unutulursa kurtarma mümkün değil.</div>
+    </div>
+    <div class="ig">
+      <label class="lbl">Master Şifre</label>
+      <div class="inprow">
+        <input type="password" id="su-pw" class="inp" placeholder="En az 8 karakter..." oninput="chkStr()" autocomplete="new-password">
+        <button class="ipico" onclick="tvs('su-pw',this)" type="button">👁</button>
+      </div>
+      <div class="strbar"><div class="strfill" id="sfill"></div></div>
+      <div style="font-size:12px;margin-top:5px" id="slbl"></div>
+    </div>
+    <div class="ig">
+      <label class="lbl">Tekrar Gir</label>
+      <div class="inprow">
+        <input type="password" id="su-pw2" class="inp" placeholder="Şifreyi tekrar gir..." autocomplete="new-password">
+        <button class="ipico" onclick="tvs('su-pw2',this)" type="button">👁</button>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:13px 15px;font-size:13px;color:var(--txt2);line-height:1.6;margin-bottom:22px">
+      ⚠️ <strong style="color:var(--txt)">Zero-knowledge</strong> mimari: şifren hiçbir sunucuya gönderilmez. Tüm veriler cihazında <strong style="color:var(--txt)">AES-256 GCM</strong> ile şifrelenir.
+    </div>
+    <button class="btn bpri" onclick="setupVault()" type="button">Kasayı Oluştur</button>
+  </div>
+</div>
+
+<!-- ══════════ LOCK ══════════ -->
+<div id="s-lock" class="screen">
+  <div class="sbar"><span class="sbar-l">9:41</span><span class="sbar-r">●●●</span></div>
+  <div style="flex:1;padding:20px;display:flex;flex-direction:column;justify-content:center;padding-bottom:calc(32px + var(--safe-bot))">
+    <div style="width:76px;height:76px;background:var(--acbg);border:1.5px solid var(--brd);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 18px">🔒</div>
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:22px;font-weight:700;margin-bottom:6px">Antigravity Vault</div>
+      <div style="color:var(--txt2);font-size:13px">Master şifreni girerek kilidi aç</div>
+    </div>
+    <div class="ig">
+      <div class="inprow">
+        <input type="password" id="lk-pw" class="inp" placeholder="Master şifre..." autocomplete="current-password" onkeydown="if(event.key==='Enter')unlock()">
+        <button class="ipico" onclick="tvs('lk-pw',this)" type="button">👁</button>
+      </div>
+    </div>
+    <button class="btn bpri" style="margin-bottom:10px" onclick="unlock()" type="button">Kilidi Aç</button>
+    <button class="btn bghost" onclick="showBioInfo()" type="button"><span style="font-size:18px">👆</span> Biyometrik Giriş</button>
+    <div style="text-align:center;margin-top:20px">
+      <button onclick="resetVault()" style="background:none;border:none;color:var(--txt3);font-size:12px;cursor:pointer;padding:4px" type="button">Kasayı Sıfırla</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ VAULT ══════════ -->
+<div id="s-vault" class="screen" style="position:relative">
+  <div class="sbar">
+    <span class="sbar-l">Kasam</span>
+    <span class="sbar-r"><span id="ic" style="color:var(--accent);font-weight:600"></span></span>
+  </div>
+  <div class="shdr">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:26px;font-weight:700">Şifrelerim</div>
+      <div style="display:flex;gap:8px">
+        <button class="bico" title="Şifre Üretici" onclick="gt('s-gen')" type="button">⚡</button>
+        <button class="bico" title="Kilitle" onclick="lockV()" type="button">🔒</button>
+      </div>
+    </div>
+    <div class="inprow" style="margin-bottom:8px">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:15px;pointer-events:none">🔍</span>
+      <input type="search" id="srch" class="inp" style="padding-left:42px" placeholder="Ara..." oninput="rndr()" autocomplete="off">
+    </div>
+    <div class="catscrl" id="catf">
+      <button id="f-all" class="badge" style="cursor:pointer;border:1.5px solid var(--accent);background:var(--acbg);color:var(--accent);white-space:nowrap;padding:5px 12px" onclick="sflt('')" type="button">Tümü</button>
+      <button id="f-email" class="badge ce" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('email')" type="button">E-posta</button>
+      <button id="f-social" class="badge cs" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('social')" type="button">Sosyal</button>
+      <button id="f-bank" class="badge cb" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('bank')" type="button">Banka</button>
+      <button id="f-api" class="badge ca" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('api')" type="button">API</button>
+      <button id="f-other" class="badge co" style="cursor:pointer;white-space:nowrap;padding:5px 12px" onclick="sflt('other')" type="button">Diğer</button>
+    </div>
+  </div>
+  <div class="scrl" style="padding:2px 20px calc(90px + var(--safe-bot))" id="ilist"></div>
+  <button class="fab" onclick="openAdd()" title="Yeni şifre ekle" type="button">+</button>
+</div>
+
+<!-- ══════════ FORM ══════════ -->
+<div id="s-form" class="screen">
+  <div class="sbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="bico" onclick="gt('s-vault')" type="button">←</button>
+      <span style="font-size:19px;font-weight:700" id="ftitle">Yeni Şifre</span>
+    </div>
+    <span></span>
+  </div>
+  <div class="scrl" style="padding:4px 20px calc(24px + var(--safe-bot))">
+    <div class="ig">
+      <label class="lbl">Site / Uygulama Adı *</label>
+      <input type="text" id="f-t" class="inp" placeholder="Gmail, Instagram, Netflix..." autocomplete="off">
+    </div>
+    <div class="ig">
+      <label class="lbl">Kategori</label>
+      <select id="f-c" class="inp">
+        <option value="other">Diğer</option>
+        <option value="email">E-posta</option>
+        <option value="social">Sosyal Medya</option>
+        <option value="bank">Banka / Finans</option>
+        <option value="api">API / Geliştirici</option>
+      </select>
+    </div>
+    <div class="ig">
+      <label class="lbl">Kullanıcı Adı / E-posta</label>
+      <input type="text" id="f-u" class="inp" placeholder="kullanici@ornek.com" autocomplete="off">
+    </div>
+    <div class="ig">
+      <label class="lbl">Şifre</label>
+      <div class="inprow">
+        <input type="password" id="f-p" class="inp" style="padding-right:84px" placeholder="Şifre gir veya üret..." autocomplete="new-password">
+        <div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:4px">
+          <button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tvs('f-p',this)" type="button">👁</button>
+          <button class="bico" style="width:32px;height:32px;font-size:13px;background:var(--acbg);border-color:var(--brd)" onclick="genInto()" type="button" title="Şifre üret">⚡</button>
+        </div>
+      </div>
+    </div>
+    <div class="ig">
+      <label class="lbl">Not (opsiyonel)</label>
+      <textarea id="f-n" class="inp" rows="3" style="resize:none;line-height:1.5" placeholder="Güvenlik sorusu, pin, hatırlatma..."></textarea>
+    </div>
+    <button class="btn bpri" style="margin-top:6px" onclick="saveE()" id="sbtn" type="button">Kaydet</button>
+    <button id="dbtn" class="btn bghost" style="margin-top:10px;display:none;color:var(--red);border-color:rgba(248,113,113,.25)" onclick="delEConfirm()" type="button">Kaydı Sil</button>
+    <div id="delconf" style="display:none;background:rgba(248,113,113,.08);border:1.5px solid rgba(248,113,113,.25);border-radius:var(--r);padding:16px;margin-top:10px;text-align:center">
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:12px">Bu kaydı kalıcı olarak silmek istediğine emin misin?</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn bghost" style="flex:1;padding:11px" onclick="document.getElementById('delconf').style.display='none'" type="button">İptal</button>
+        <button class="btn" style="flex:1;padding:11px;background:var(--red);color:#fff;border:none;border-radius:var(--rxl)" onclick="delE()" type="button">Sil</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DETAIL ══════════ -->
+<div id="s-detail" class="screen">
+  <div class="sbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="bico" onclick="gt('s-vault')" type="button">←</button>
+      <span style="font-size:19px;font-weight:700;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="dtitle"></span>
+    </div>
+    <button class="bico" onclick="openEdit()" type="button">✏️</button>
+  </div>
+  <div class="scrl" style="padding:0 20px calc(24px + var(--safe-bot))">
+    <div style="text-align:center;margin-bottom:20px">
+      <div id="dico" style="width:60px;height:60px;border-radius:18px;background:var(--acbg);border:1.5px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 10px"></div>
+      <span id="dbadge" class="badge co"></span>
+    </div>
+    <div id="dflds"></div>
+  </div>
+</div>
+
+<!-- ══════════ GENERATOR ══════════ -->
+<div id="s-gen" class="screen">
+  <div class="sbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="bico" onclick="gt('s-vault')" type="button">←</button>
+      <span style="font-size:19px;font-weight:700">Şifre Üretici</span>
+    </div>
+    <span></span>
+  </div>
+  <div class="scrl" style="padding:4px 20px calc(24px + var(--safe-bot))">
+    <div style="background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:20px;margin-bottom:18px;text-align:center">
+      <div id="gpw" style="font-family:'Courier New',monospace;font-size:14px;letter-spacing:1px;color:var(--accent);word-break:break-all;line-height:1.8;min-height:52px;display:flex;align-items:center;justify-content:center">-</div>
+      <div id="gstr" style="font-size:12px;margin-top:8px;color:var(--txt2)"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:22px">
+      <button class="btn bpri" style="flex:1" onclick="genPw()" type="button">⚡ Yenile</button>
+      <button class="btn bghost" style="flex:1" onclick="cpyGen()" type="button">📋 Kopyala</button>
+    </div>
+    <div style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:14px;color:var(--txt2)">Uzunluk</span>
+        <span id="glenval" style="font-size:16px;font-weight:600;color:var(--accent)">16</span>
+      </div>
+      <input type="range" id="glen" min="8" max="64" value="16" step="1" style="width:100%" oninput="document.getElementById('glenval').textContent=this.value;genPw()">
+    </div>
+    <div style="background:var(--card);border:1.5px solid var(--brd2);border-radius:var(--r);padding:4px 16px">
+      <div class="trrow"><span style="font-size:14px">Büyük Harf (A-Z)</span><button class="toggle on" id="tu" onclick="topt(this);genPw()" type="button"><div class="tthumb"></div></button></div>
+      <div class="trrow"><span style="font-size:14px">Küçük Harf (a-z)</span><button class="toggle on" id="tl" onclick="topt(this);genPw()" type="button"><div class="tthumb"></div></button></div>
+      <div class="trrow"><span style="font-size:14px">Sayı (0-9)</span><button class="toggle on" id="tn" onclick="topt(this);genPw()" type="button"><div class="tthumb"></div></button></div>
+      <div class="trrow"><span style="font-size:14px">Sembol (!@#$...)</span><button class="toggle on" id="ts" onclick="topt(this);genPw()" type="button"><div class="tthumb"></div></button></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<script>
+'use strict';
+const ENC=new TextEncoder(),DEC=new TextDecoder();
+const SK='agv_meta',SI='agv_items';
+let mKey=null,vItems=[],editId=null,actFlt='',cbTimer=null;
+const CLB={email:'E-posta',social:'Sosyal',bank:'Banka',api:'API',other:'Diğer'};
+const CIC={email:'📧',social:'💬',bank:'🏦',api:'⚙️',other:'🔑'};
+const CCL={email:'ce',social:'cs',bank:'cb',api:'ca',other:'co'};
+
+// ── Crypto helpers ──
+async function dkey(pw,salt){
+  const km=await crypto.subtle.importKey('raw',ENC.encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function aenc(txt,key){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,ENC.encode(txt));
+  return{iv:b64e(iv),ct:b64e(new Uint8Array(ct))};
+}
+async function adec(d,key){
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(d.iv)},key,b64d(d.ct));
+  return DEC.decode(pt);
+}
+const b64e=u=>btoa(String.fromCharCode(...u));
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const uid=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():(Math.random().toString(36).slice(2)+Date.now().toString(36));
+
+// ── Storage (localStorage) ──
+function lsGet(k){try{return localStorage.getItem(k);}catch{return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true;}catch{return false;}}
+function lsDel(k){try{localStorage.removeItem(k);}catch{}}
+
+// ── Navigation ──
+function gt(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── Toast ──
+let toastTimer;
+function toast(m,dur=2600){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ── Toggle password visibility ──
+function tvs(id,btn){
+  const i=document.getElementById(id);
+  i.type=i.type==='password'?'text':'password';
+  btn.textContent=i.type==='password'?'👁':'🙈';
+}
+
+// ── Strength indicator ──
+function chkStr(){
+  const pw=document.getElementById('su-pw').value;
+  let s=0;
+  if(pw.length>=8)s++;if(pw.length>=12)s++;
+  if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;
+  const cols=['#EF4444','#F59E0B','#FBBF24','#10B981','#10B981'];
+  const labs=['Çok Zayıf','Zayıf','Orta','Güçlü','Çok Güçlü'];
+  const f=document.getElementById('sfill');
+  f.style.width=(s/5*100)+'%';
+  f.style.background=cols[s-1]||'var(--card3)';
+  const l=document.getElementById('slbl');
+  l.textContent=s>0?labs[s-1]:'';
+  l.style.color=cols[s-1]||'var(--txt2)';
+}
+
+// ── Setup ──
+async function setupVault(){
+  const pw=document.getElementById('su-pw').value.trim();
+  const pw2=document.getElementById('su-pw2').value;
+  if(pw.length<8){toast('Şifre en az 8 karakter olmalı');return;}
+  if(pw!==pw2){toast('Şifreler eşleşmiyor');return;}
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  mKey=await dkey(pw,salt);
+  const vrf=await aenc('AGVAULT_OK_V1',mKey);
+  const meta={salt:b64e(salt),vrf};
+  lsSet(SK,JSON.stringify(meta));
+  lsSet(SI,JSON.stringify([]));
+  vItems=[];rndr();gt('s-vault');toast('Kasa oluşturuldu ✓');
+}
+
+// ── Unlock ──
+async function unlock(){
+  const pw=document.getElementById('lk-pw').value;
+  if(!pw){toast('Şifre gir');return;}
+  try{
+    const raw=lsGet(SK);if(!raw)throw new Error();
+    const meta=JSON.parse(raw);
+    const key=await dkey(pw,b64d(meta.salt));
+    const v=await adec(meta.vrf,key);
+    if(v!=='AGVAULT_OK_V1')throw new Error('wrong');
+    mKey=key;
+    await loadItems();
+    document.getElementById('lk-pw').value='';
+    gt('s-vault');
+  }catch{toast('Yanlış şifre ❌');}
+}
+
+function showBioInfo(){
+  toast('Gerçek uygulamada parmak izi aktif olurdu. Şifreni kullan.');
+}
+
+function lockV(){mKey=null;vItems=[];gt('s-lock');}
+
+function resetVault(){
+  if(!confirm('Tüm şifreler kalıcı olarak silinecek! Emin misin?'))return;
+  lsDel(SK);lsDel(SI);mKey=null;vItems=[];gt('s-setup');toast('Kasa sıfırlandı');
+}
+
+// ── Load / save ──
+async function loadItems(){
+  try{
+    const raw=lsGet(SI);if(!raw){vItems=[];return;}
+    const enc_items=JSON.parse(raw);
+    vItems=await Promise.all(enc_items.map(async it=>({
+      ...it,
+      password:await adec(it.pe,mKey),
+      notes:it.ne?await adec(it.ne,mKey):'',
+      pe:undefined,ne:undefined
+    })));
+    rndr();
+  }catch(e){console.error(e);vItems=[];}
+}
+
+async function persist(){
+  const ep=await Promise.all(vItems.map(async it=>({
+    id:it.id,title:it.title,username:it.username,category:it.category,
+    createdAt:it.createdAt,updatedAt:it.updatedAt,
+    pe:await aenc(it.password||'',mKey),
+    ne:await aenc(it.notes||'',mKey)
+  })));
+  lsSet(SI,JSON.stringify(ep));
+}
+
+// ── Filter ──
+function sflt(c){actFlt=c;rndr();}
+
+// ── Render vault ──
+function rndr(){
+  const q=(document.getElementById('srch')||{value:''}).value.toLowerCase().trim();
+  const filtered=vItems.filter(it=>(!actFlt||it.category===actFlt)&&(!q||it.title.toLowerCase().includes(q)||it.username.toLowerCase().includes(q)));
+  document.getElementById('ic').textContent=vItems.length+' kayıt';
+  const list=document.getElementById('ilist');
+  if(!filtered.length){
+    list.innerHTML=`<div class="empty">
+      <div style="font-size:48px;opacity:.25">${!vItems.length?'🔐':'🔍'}</div>
+      <div style="font-size:15px;font-weight:600;color:var(--txt2)">${!vItems.length?'Kasa Boş':'Sonuç Yok'}</div>
+      <div style="font-size:13px;color:var(--txt3)">${!vItems.length?'+ butonuna basarak ilk şifreni ekle':'Farklı bir arama dene'}</div>
+    </div>`;return;
+  }
+  list.innerHTML=filtered.map(it=>`
+    <div class="card" onclick="openDetail('${it.id}')">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;border-radius:14px;background:var(--acbg);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${CIC[it.category]||'🔑'}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.title)}</div>
+          <div style="font-size:12px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.username)||'—'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+          <span class="badge ${CCL[it.category]||'co'}" style="font-size:10px">${CLB[it.category]||'Diğer'}</span>
+          <button style="background:none;border:none;color:var(--txt3);font-size:15px;cursor:pointer;padding:2px;outline:none" onclick="event.stopPropagation();doCpy(vItems.find(x=>x.id==='${it.id}')?.password||'')" title="Şifreyi kopyala" type="button">📋</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── Detail view ──
+const fvState={};
+function openDetail(id){
+  const it=vItems.find(i=>i.id===id);if(!it)return;
+  editId=id;
+  document.getElementById('dtitle').textContent=it.title;
+  document.getElementById('dico').textContent=CIC[it.category]||'🔑';
+  const db=document.getElementById('dbadge');
+  db.textContent=CLB[it.category]||'Diğer';db.className='badge '+(CCL[it.category]||'co');
+  document.getElementById('dflds').innerHTML=
+    dFld('Kullanıcı Adı',it.username||'—',id,'u',false)+
+    dFld('Şifre',it.password||'',id,'p',true)+
+    (it.notes?dFld('Not',it.notes,id,'n',false):'')+
+    `<div style="font-size:11px;color:var(--txt3);text-align:center;margin-top:14px">Oluşturuldu: ${new Date(it.createdAt).toLocaleDateString('tr-TR')}</div>`;
+  gt('s-detail');
+}
+
+function dFld(lbl,val,id,fld,isPw){
+  return`<div class="dfld">
+    <div class="dfld-label">${lbl}</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div id="dv-${id}-${fld}" style="flex:1;font-size:14px;color:var(--txt);word-break:break-all;font-family:${isPw?'monospace':'inherit'}">${isPw?'••••••••••':esc(val)}</div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        ${isPw?`<button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tFV('${id}','${fld}','${esc(val).replace(/'/g,'\\x27')}')" type="button">👁</button>`:''}
+        <button class="bico" style="width:32px;height:32px;font-size:13px" onclick="doCpy('${esc(val).replace(/'/g,'\\x27')}')" type="button">📋</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function tFV(id,fld,val){
+  const k=id+fld;fvState[k]=!fvState[k];
+  const el=document.getElementById('dv-'+id+'-'+fld);
+  if(el)el.textContent=fvState[k]?val:'••••••••••';
+}
+
+// ── Add / Edit ──
+function openAdd(){
+  editId=null;
+  document.getElementById('ftitle').textContent='Yeni Şifre';
+  ['f-t','f-u','f-p','f-n'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('f-c').value='other';
+  document.getElementById('sbtn').textContent='Kaydet';
+  document.getElementById('dbtn').style.display='none';
+  document.getElementById('delconf').style.display='none';
+  gt('s-form');
+}
+
+function openEdit(){
+  const it=vItems.find(i=>i.id===editId);if(!it)return;
+  document.getElementById('ftitle').textContent='Düzenle';
+  document.getElementById('f-t').value=it.title;
+  document.getElementById('f-c').value=it.category||'other';
+  document.getElementById('f-u').value=it.username||'';
+  document.getElementById('f-p').value=it.password||'';
+  document.getElementById('f-n').value=it.notes||'';
+  document.getElementById('sbtn').textContent='Güncelle';
+  document.getElementById('dbtn').style.display='flex';
+  document.getElementById('delconf').style.display='none';
+  gt('s-form');
+}
+
+async function saveE(){
+  const title=document.getElementById('f-t').value.trim();
+  if(!title){toast('Site adı gerekli');return;}
+  const e={title,category:document.getElementById('f-c').value,username:document.getElementById('f-u').value.trim(),password:document.getElementById('f-p').value,notes:document.getElementById('f-n').value.trim()};
+  if(editId){const i=vItems.findIndex(x=>x.id===editId);if(i>=0)vItems[i]={...vItems[i],...e,updatedAt:Date.now()};}
+  else vItems.unshift({id:uid(),...e,createdAt:Date.now(),updatedAt:Date.now()});
+  try{await persist();rndr();gt('s-vault');toast(editId?'Güncellendi ✓':'Eklendi ✓');}
+  catch(e){toast('Kayıt hatası');}
+}
+
+function delEConfirm(){document.getElementById('delconf').style.display='block';}
+async function delE(){
+  vItems=vItems.filter(i=>i.id!==editId);
+  await persist();rndr();gt('s-vault');toast('Silindi');
+}
+
+// ── Password generator ──
+const UP='ABCDEFGHIJKLMNOPQRSTUVWXYZ',LO='abcdefghijklmnopqrstuvwxyz',NU='0123456789',SY='!@#$%^&*()_+-=[];:,.<>?';
+function genPw(){
+  const len=parseInt(document.getElementById('glen').value);
+  let cs='';
+  if(document.getElementById('tu').classList.contains('on'))cs+=UP;
+  if(document.getElementById('tl').classList.contains('on'))cs+=LO;
+  if(document.getElementById('tn').classList.contains('on'))cs+=NU;
+  if(document.getElementById('ts').classList.contains('on'))cs+=SY;
+  if(!cs)cs=LO;
+  const arr=new Uint32Array(len);crypto.getRandomValues(arr);
+  const pw=Array.from(arr).map(n=>cs[n%cs.length]).join('');
+  document.getElementById('gpw').textContent=pw;
+  const bits=Math.log2(cs.length)*len;
+  const sl=document.getElementById('gstr');
+  const[lbl,col]=bits<40?['Zayıf','#F87171']:bits<60?['Orta','#FBBF24']:bits<80?['Güçlü','#10B981']:['Çok Güçlü','#8B5CF6'];
+  sl.textContent=lbl+' — '+Math.round(bits)+' bit entropi';sl.style.color=col;
+  return pw;
+}
+function cpyGen(){const pw=document.getElementById('gpw').textContent;if(pw!=='-')doCpy(pw);}
+function topt(b){b.classList.toggle('on');}
+function genInto(){
+  const cs=UP+LO+NU+SY;const arr=new Uint32Array(16);crypto.getRandomValues(arr);
+  const pw=Array.from(arr).map(n=>cs[n%cs.length]).join('');
+  const i=document.getElementById('f-p');i.value=pw;i.type='text';
+  toast('Şifre üretildi ✓ (3sn sonra gizlenir)');
+  setTimeout(()=>{i.type='password';},3000);
+}
+
+// ── Clipboard ──
+function doCpy(txt){
+  const ok=()=>{ toast('Kopyalandı 📋  — 15sn sonra temizlenir');if(cbTimer)clearTimeout(cbTimer);cbTimer=setTimeout(()=>navigator.clipboard?.writeText('').catch(()=>{}),15000);};
+  const fb=()=>{try{const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;left:-9999px;top:-9999px';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();}catch{toast('Kopyalama başarısız');}};
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(ok).catch(fb);
+  else fb();
+}
+
+// ── Utils ──
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Service Worker (offline cache) ──
+if('serviceWorker' in navigator && window.isSecureContext){
+  const swSrc=`
+const V='agv1';
+self.addEventListener('install',e=>e.waitUntil(caches.open(V).then(c=>c.add(location.pathname||'/'))));
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{if(resp&&resp.status===200&&resp.type==='basic'){const c=resp.clone();caches.open(V).then(ca=>ca.put(e.request,c));}return resp;}))));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k))))));
+  `;
+  const blob=new Blob([swSrc],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+
+// ── Init ──
+genPw();
+const hasMeta=!!lsGet(SK);
+gt(hasMeta?'s-lock':'s-setup');
+</script>
+</body>
+</html>
