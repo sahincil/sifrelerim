@@ -134,7 +134,7 @@ select.inp{cursor:pointer}
 </style>
 </head>
 <body>
-<!-- FIREBASE SDK (Bulut Bağlantısı) -->
+<!-- FIREBASE SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -234,6 +234,7 @@ select.inp{cursor:pointer}
       <button class="bico" onclick="gt('s-vault')" type="button">←</button>
       <span style="font-size:19px;font-weight:700" id="ftitle">Yeni Şifre</span>
     </div>
+    <span></span>
   </div>
   <div class="scrl" style="padding:4px 20px calc(24px + var(--safe-bot))">
     <div class="ig">
@@ -260,7 +261,7 @@ select.inp{cursor:pointer}
         <input type="password" id="f-p" class="inp" style="padding-right:84px" placeholder="Şifre gir..." autocomplete="new-password">
         <div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:4px">
           <button class="bico" style="width:32px;height:32px;font-size:13px" onclick="tvs('f-p',this)" type="button">👁</button>
-          <button class="bico" style="width:32px;height:32px;font-size:13px;background:var(--acbg);border-color:var(--brd)" onclick="genInto()" type="button">⚡</button>
+          <button class="bico" style="width:32px;height:32px;font-size:13px;background:var(--acbg);border-color:var(--brd)" onclick="genInto()" type="button" title="Şifre üret">⚡</button>
         </div>
       </div>
     </div>
@@ -305,6 +306,7 @@ select.inp{cursor:pointer}
       <button class="bico" onclick="gt('s-vault')" type="button">←</button>
       <span style="font-size:19px;font-weight:700">Şifre Üretici</span>
     </div>
+    <span></span>
   </div>
   <div class="scrl" style="padding:4px 20px calc(24px + var(--safe-bot))">
     <div style="background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:20px;margin-bottom:18px;text-align:center">
@@ -413,27 +415,31 @@ function chkStr(){
 // ── Setup (Firebase) ──
 async function setupVault(){
   const pw=document.getElementById('su-pw').value.trim();
-  const pw2=document.getElementById('su-//pw2').value; // Fixed ID
+  const pw2=document.getElementById('su-pw2').value;
   if(pw.length<8){toast('Şifre en az 8 karakter olmalı');return;}
-  if(pw!==document.getElementById('su-pw2').value){toast('Şifreler eşleşmiyor');return;}
+  if(pw!==pw2){toast('Şifreler eşleşmiyor');return;}
   
-  const salt=crypto.getRandomValues(new Uint8Array(16));
-  mKey=await dkey(pw,salt);
-  const vrf=await aenc('AGVAULT_OK_V1',mKey);
-  const meta={salt:b64e(salt),vrf};
-  
-  // Buluta Kaydet
-  await db.ref('vault_meta').set(meta);
-  await db.ref('vault_items').set({});
-  
-  vItems=[];rndr();gt('s-vault');toast('Kasa bulutta oluşturuldu ✓');
+  try {
+    const salt=crypto.getRandomValues(new Uint8Array(16));
+    mKey=await dkey(pw,salt);
+    const vrf=await aenc('AGVAULT_OK_V1',mKey);
+    const meta={salt:b64e(salt),vrf};
+    
+    await db.ref('vault_meta').set(meta);
+    await db.ref('vault_items').set({});
+    
+    vItems=[];rndr();gt('s-vault');toast('Kasa bulutta oluşturuldu ✓');
+  } catch(e) {
+    console.error(e);
+    toast('Kasa oluşturulurken hata oluştu');
+  }
 }
 
 // ── Unlock (Firebase) ──
 async function unlock(){
   const pw=document.getElementById('lk-pw').value;
   if(!pw){toast('Şifre gir');return;}
-  try{
+  try {
     const snap = await db.ref('vault_meta').once('value');
     const meta=snap.val();
     if(!meta) throw new Error('NoMeta');
@@ -444,10 +450,11 @@ async function unlock(){
     
     mKey=key;
     await loadItems();
-    document.getElementById('lk-//pw').value=''; // Fixed ID
     document.getElementById('lk-pw').value='';
     gt('s-vault');
-  }catch(e){toast('Yanlış şifre veya kasa bulunamadı ❌');}
+  } catch(e) {
+    toast('Yanlış şifre veya kasa bulunamadı ❌');
+  }
 }
 
 function showBioInfo(){toast('Biyometrik giriş bulut versiyonunda desteklenmez. Şifrenizi kullanın.');}
@@ -462,20 +469,24 @@ async function resetVault(){
 
 // ── Load / Save (Firebase) ──
 async function loadItems(){
-  try{
+  try {
     const snap = await db.ref('vault_items').once('value');
     const raw = snap.val();
     if(!raw){ vItems=[]; rndr(); return; }
     
     const enc_items=Object.values(raw);
-    vItems=await Promise.all(enc_items.map(async it=>({
+    vItems=await Promise.all(enc_//items.map(async it=>({
       ...it,
       password:await adec(it.pe,mKey),
       notes:it.ne?await adec(it.ne,mKey):'',
       pe:undefined,ne:undefined
     })));
     rndr();
-  }catch(e){console.error(e);vItems=[];}
+  } catch(e) {
+    console.error(e);
+    vItems=[];
+    rndr();
+  }
 }
 
 async function persist(){
@@ -570,7 +581,6 @@ function openAdd(){
   document.getElementById('dbtn').style.display='none';
   document.getElementById('delconf').style.display='none';
   gt('s-form');
-}
 
 function openEdit(){
   const it=vItems.find(i=>i.id===editId);if(!it)return;
